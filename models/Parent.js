@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    fatherEmail: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     motherName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -25,10 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     motherNo: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    motherEmail: {
       type: DataTypes.STRING,
       allowNull: false,
     },

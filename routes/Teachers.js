@@ -28,4 +28,30 @@ router.get("/tch", async (req, res) => {
   res.json(listOfteachers);
 });
 
+router.get("/teacherList", async (req, res) => {
+  const listOfTeachersall = await Teacher.findAll({
+    attributes: [
+      "teacherId",
+      "fName",
+      "lName",
+      "teacherNIC",
+      "teacherNo",
+      "teacherEmail",
+      "regDate",
+    ],
+  });
+  // Extract the required properties for each student and assign a unique id
+  const formattedList = listOfTeachersall.map((teacher, index) => ({
+    id: index + 1, // Assign a unique id based on the index (starting from 1)
+    teacherId: teacher.teacherId,
+    fName: teacher.fName,
+    lName: teacher.lName,
+    teacherNIC: teacher.teacherNIC,
+    teacherNo: teacher.teacherNo,
+    teacherEmail: teacher.teacherEmail,
+    regDate: teacher.regDate,
+  }));
+  res.json(formattedList);
+});
+
 module.exports = router;

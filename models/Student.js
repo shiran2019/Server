@@ -37,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    regyear: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    pNote: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   });
 
   Student.associate = (models) => {

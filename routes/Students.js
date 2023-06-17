@@ -42,4 +42,34 @@ router.post("/", async (req, res) => {
   res.json(student);
 });
 
+router.get("/studentList", async (req, res) => {
+  const listOfStudents = await Student.findAll({
+    attributes: [
+      "studentId",
+      "fName",
+      "lName",
+      "gender",
+      "birthday",
+      "ClassClassName",
+      "regyear",
+      "pNote",
+    ],
+  });
+
+  // Extract the required properties for each student and assign a unique id
+  const formattedList = listOfStudents.map((student, index) => ({
+    id: index + 1, // Assign a unique id based on the index (starting from 1)
+    studentId: student.studentId,
+    fName: student.fName,
+    lName: student.lName,
+    gender: student.gender,
+    birthday: student.birthday,
+    ClassClassName: student.ClassClassName,
+    regyear: student.regyear,
+    pNote: student.pNote,
+  }));
+
+  res.json(formattedList);
+});
+
 module.exports = router;

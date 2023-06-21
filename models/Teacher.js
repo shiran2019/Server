@@ -24,14 +24,17 @@ module.exports = (sequelize, DataTypes) => {
     teacherNIC: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     teacherNo: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     teacherEmail: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     regDate: {
       type: DataTypes.DATEONLY,

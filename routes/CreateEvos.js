@@ -13,4 +13,11 @@ router.post("/", async (req, res) => {
   res.json(createdEvos);
 });
 
+router.get("/evo", async (req, res) => {
+  const listOfEvoss = await CreateEvo.findAll({
+    attributes: ["EvoType", "id"], // Replace 'columnName' with the actual name of the column you want to retrieve
+  });
+  res.json(listOfEvoss);
+});
+
 module.exports = router;

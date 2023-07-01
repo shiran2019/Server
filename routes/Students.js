@@ -72,4 +72,24 @@ router.get("/studentList", async (req, res) => {
   res.json(formattedList);
 });
 
+router.get("/class/:className", async (req, res) => {
+  const className = req.params.className;
+
+  // Find all students in the specified class
+  const studentsInClass = await Student.findAll({
+    where: {
+      ClassClassName: className,
+    },
+  });
+
+  // Extract the required properties for each student
+  const formattedList = studentsInClass.map((student) => ({
+    studentId: student.studentId,
+    fName: student.fName,
+    pNote: student.pNote,
+  }));
+
+  res.json(formattedList);
+});
+
 module.exports = router;

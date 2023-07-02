@@ -13,4 +13,18 @@ router.post("/", async (req, res) => {
   res.json(createdEvo);
 });
 
+router.get("/:createEvoId", async (req, res) => {
+  const { createEvoId } = req.params;
+  const termEvo = await TermEvo.findAll({
+    where: { CreateEvoId: createEvoId },
+  });
+
+  const formattedList = termEvo.map((evo) => ({
+    CreateEvoId: evo.CreateEvoId,
+    StudentId: evo.StudentId,
+    Mark: evo.Mark,
+  }));
+  res.json(formattedList);
+});
+
 module.exports = router;

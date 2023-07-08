@@ -1,5 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
   const Parent = sequelize.define("Parent", {
+    parentId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+
     fatherName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -32,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Parent.associate = (models) => {
     Parent.hasMany(models.Student, {
-      onDelete: "cascade",
+      foreignKey: "parentId",
     });
   };
 

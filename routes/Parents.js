@@ -9,10 +9,10 @@ router.get("/", async (req, res) => {
 
 router.get("/lastId", async (req, res) => {
   const lastParent = await Parent.findOne({
-    order: [["id", "DESC"]],
+    order: [["parentId", "DESC"]],
   });
-  const lastParentId = lastParent ? lastParent.id : null;
-  res.json({ id: lastParentId });
+  const lastParentId = lastParent ? lastParent.parentId : null;
+  res.json({ parentId: lastParentId });
 });
 
 router.post("/", async (req, res) => {

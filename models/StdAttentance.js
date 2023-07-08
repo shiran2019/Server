@@ -3,16 +3,23 @@ module.exports = (sequelize, DataTypes) => {
     Day: {
       type: DataTypes.DATEONLY,
       allowNull: false,
+      primaryKey: true,
     },
     Attendance: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    Note: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
   });
+
+  StdAttendance.associate = (models) => {
+    StdAttendance.belongsTo(models.Student, {
+      foreignKey: {
+        name: "StudentId",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+  };
 
   return StdAttendance;
 };

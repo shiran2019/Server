@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   res.json(listOfEvos);
 });
 
-router.post("/", validateToken, async (req, res) => {
+router.post("/", async (req, res) => {
   const evo = req.body;
   const createdEvos = await CreateEvo.create(evo);
   res.json(createdEvos);
@@ -16,7 +16,7 @@ router.post("/", validateToken, async (req, res) => {
 
 router.get("/evo", async (req, res) => {
   const listOfEvoss = await CreateEvo.findAll({
-    attributes: ["EvoType", "id"], // Replace 'columnName' with the actual name of the column you want to retrieve
+    attributes: ["EvoType", "EvoId"], // Replace 'columnName' with the actual name of the column you want to retrieve
   });
   res.json(listOfEvoss);
 });

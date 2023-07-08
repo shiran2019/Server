@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Student = sequelize.define("Student", {
-    studentId: {
+    StudentId: {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    className: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     pNote: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -48,34 +52,42 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Student.associate = (models) => {
-    Student.hasMany(models.StdAttendance),
-      {
-        onDelete: "cascade",
-      };
-  };
+    Student.belongsTo(models.Parent, {
+      foreignKey: {
+        name: "parentId",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
 
-  Student.associate = (models) => {
-    Student.hasMany(models.StdTransport),
-      {
-        onDelete: "cascade",
-      };
-  };
+    Student.hasMany(models.StdPayment, {
+      foreignKey: {
+        name: "StudentId",
+      },
+    });
 
-  Student.associate = (models) => {
-    Student.hasMany(models.StdPayment),
-      {
-        onDelete: "cascade",
-      };
-  };
-
-  Student.associate = (models) => {
     Student.hasMany(models.TermEvo, {
+      foreignKey: {
+        name: "StudentId",
+      },
+      onDelete: "cascade",
+    });
+
+    Student.hasMany(models.StdAttendance, {
       foreignKey: {
         name: "StudentId",
         primaryKey: true,
       },
       onDelete: "cascade",
     });
+
+    // Student.belongsTo(models.Class, {
+    //   foreignKey: {
+    //     name: "className",
+    //   },
+    //   onDelete: "CASCADE",
+    //   onUpdate: "CASCADE",
+    // });
   };
 
   return Student;

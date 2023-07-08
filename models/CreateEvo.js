@@ -1,5 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const CreateEvo = sequelize.define("CreateEvo", {
+    EvoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     EvoType: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,12 +24,15 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  CreateEvo.associate = (models) => {
-    CreateEvo.hasMany(models.TermEvo),
-      {
-        onDelete: "cascade",
-      };
-  };
+  // CreateEvo.associate = (models) => {
+  //   CreateEvo.hasMany(models.TermEvo),
+  //     {
+  //       foreignKey: {
+  //         name: "EvoId",
+  //       },
+  //       onDelete: "cascade",
+  //     };
+  // };
 
   return CreateEvo;
 };

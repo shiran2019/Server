@@ -7,30 +7,30 @@ router.get("/", async (req, res) => {
   res.json(listOfStudents);
 });
 
-router.get("/byId/:studentId", async (req, res) => {
-  const id = req.params.studentId;
+router.get("/byId/:StudentId", async (req, res) => {
+  const id = req.params.StudentId;
   const student = await Student.findByPk(id);
   res.json(student);
 });
 
 router.get("/lastId", async (req, res) => {
   const lastStudent = await Student.findOne({
-    order: [["studentId", "DESC"]],
+    order: [["StudentId", "DESC"]],
   });
-  const lastStudentId = lastStudent ? lastStudent.studentId : null;
+  const lastStudentId = lastStudent ? lastStudent.StudentId : null;
   res.json({ id: lastStudentId });
 });
 
 router.get("/classCount", async (req, res) => {
   const classCounts = await Student.findAll({
     attributes: [
-      "ClassClassName",
-      [Sequelize.fn("COUNT", Sequelize.col("ClassClassName")), "count"],
+      "className",
+      [Sequelize.fn("COUNT", Sequelize.col("className")), "count"],
     ],
-    group: ["ClassClassName"],
+    group: ["className"],
   });
-  const result = classCounts.map(({ ClassClassName, dataValues }) => ({
-    className: ClassClassName,
+  const result = classCounts.map(({ className, dataValues }) => ({
+    className: className,
     count: dataValues.count,
   }));
   res.json(result);
@@ -45,12 +45,12 @@ router.post("/", async (req, res) => {
 router.get("/studentList", async (req, res) => {
   const listOfStudents = await Student.findAll({
     attributes: [
-      "studentId",
+      "StudentId",
       "fName",
       "lName",
       "gender",
       "birthday",
-      "ClassClassName",
+      "className",
       "regyear",
       "pNote",
     ],
@@ -59,12 +59,12 @@ router.get("/studentList", async (req, res) => {
   // Extract the required properties for each student and assign a unique id
   const formattedList = listOfStudents.map((student, index) => ({
     id: index + 1, // Assign a unique id based on the index (starting from 1)
-    studentId: student.studentId,
+    StudentId: student.StudentId,
     fName: student.fName,
     lName: student.lName,
     gender: student.gender,
     birthday: student.birthday,
-    ClassClassName: student.ClassClassName,
+    className: student.className,
     regyear: student.regyear,
     pNote: student.pNote,
   }));
@@ -78,13 +78,13 @@ router.get("/class/:className", async (req, res) => {
   // Find all students in the specified class
   const studentsInClass = await Student.findAll({
     where: {
-      ClassClassName: className,
+      className: className,
     },
   });
 
   // Extract the required properties for each student
   const formattedList = studentsInClass.map((student) => ({
-    studentId: student.studentId,
+    StudentId: student.StudentId,
     fName: student.fName,
     pNote: student.pNote,
   }));

@@ -13,14 +13,14 @@ router.post("/", async (req, res) => {
   res.json(createdEvo);
 });
 
-router.get("/:createEvoId", async (req, res) => {
-  const { createEvoId } = req.params;
+router.get("/:EvoId", async (req, res) => {
+  const { EvoId } = req.params;
   const termEvo = await TermEvo.findAll({
-    where: { CreateEvoId: createEvoId },
+    where: { EvoId: EvoId },
   });
 
   const formattedList = termEvo.map((evo) => ({
-    CreateEvoId: evo.CreateEvoId,
+    EvoId: evo.EvoId,
     StudentId: evo.StudentId,
     Mark: evo.Mark,
   }));

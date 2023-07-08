@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
 
 router.get("/clsDetails", async (req, res) => {
   const listOfclasses = await Class.findAll({
-    attributes: ["className", "TeacherTeacherId"], // Replace 'columnName' with the actual name of the column you want to retrieve
+    attributes: ["className", "teacherId"], // Replace 'columnName' with the actual name of the column you want to retrieve
   });
   res.json(listOfclasses);
 });

@@ -1,25 +1,26 @@
 module.exports = (sequelize, DataTypes) => {
-  const Class = sequelize.define("Class", {
-    ClassId: {
-      type: DataTypes.INTEGER,
+  const TchAttendance = sequelize.define("TchAttendance", {
+    Day: {
+      type: DataTypes.DATEONLY,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
     },
-    className: {
+    Attendance: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   });
 
-  Class.associate = (models) => {
-    Class.belongsTo(models.Teacher, {
+  TchAttendance.associate = (models) => {
+    TchAttendance.belongsTo(models.Teacher, {
       foreignKey: {
         name: "teacherId",
+        primaryKey: true,
       },
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
   };
-  return Class;
+
+  return TchAttendance;
 };

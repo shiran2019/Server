@@ -1,5 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const StdTransport = sequelize.define("StdTransport", {
+    TransportId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     Day: {
       type: DataTypes.DATEONLY,
       allowNull: false,

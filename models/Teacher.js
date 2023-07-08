@@ -43,10 +43,22 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Teacher.associate = (models) => {
-    Teacher.hasMany(models.Class, {
+    Teacher.hasMany(models.TchAttendance, {
+      foreignKey: {
+        name: "teacherId",
+        primaryKey: true,
+      },
       onDelete: "cascade",
     });
   };
 
+  Teacher.associate = (models) => {
+    Teacher.hasMany(models.Class, {
+      foreignKey: {
+        name: "teacherId",
+      },
+      onDelete: "cascade",
+    });
+  };
   return Teacher;
 };

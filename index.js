@@ -34,6 +34,15 @@ app.use("/createEvoluations", createEvoRouter);
 const UserRouter = require("./routes/Users");
 app.use("/users", UserRouter);
 
+const StdAttRouter = require("./routes/StdAttentances");
+app.use("/StudentAttendance", StdAttRouter);
+
+const TchAttRouter = require("./routes/TchAttendances");
+app.use("/TeacherAttendance", TchAttRouter);
+
+const StdPayRouter = require("./routes/StdPayments");
+app.use("/StudentPayment", StdPayRouter);
+
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log("server running on port 3001");

@@ -6,5 +6,22 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
+  TermEvo.associate = (models) => {
+    TermEvo.belongsTo(models.Student, {
+      foreignKey: {
+        name: "StudentId",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+
+    TermEvo.belongsTo(models.CreateEvo, {
+      foreignKey: {
+        name: "EvoId",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+  };
   return TermEvo;
 };

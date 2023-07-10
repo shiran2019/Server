@@ -1,27 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const { Class } = require("../models");
+const { TchSalary } = require("../models");
 
 router.get("/", async (req, res) => {
-  const listOfClass = await Class.findAll();
-  res.json(listOfClass);
+  const listOfsal = await TchSalary.findAll();
+  res.json(listOfsal);
 });
 
-router.get("/cls", async (req, res) => {
-  const listOfClass = await Class.findAll({
-    attributes: ["className"], // Replace 'columnName' with the actual name of the column you want to retrieve
-  });
-  res.json(listOfClass);
+router.post("/d", async (req, res) => {
+  const post = req.body;
+  await TchSalary.create(post);
+  res.json(post);
 });
 
 router.post("/", async (req, res) => {
-  const { teacherId, className } = req.body;
+  const { teacherId, Month, Day, Salary, epfRate, Allowance, Basic } = req.body;
 
   try {
     // Check if a record with the same teacherId and Month exists
-    const existingRecord = await Class.findOne({
+    const existingRecord = await TchSalary.findOne({
       where: {
         teacherId,
+        Month,
       },
     });
 
@@ -32,9 +32,14 @@ router.post("/", async (req, res) => {
         .json({ error: "Data already exists in the database" });
     } else {
       // Create a new record
-      const newRecord = await Class.create({
+      const newRecord = await TchSalary.create({
         teacherId,
-        className,
+        Month,
+        Day,
+        Salary,
+        epfRate,
+        Allowance,
+        Basic,
       });
       return res.json(newRecord);
     }
@@ -42,13 +47,6 @@ router.post("/", async (req, res) => {
     // Handle any other errors that may occur during the process
     return res.status(500).json({ error: "Internal server error" });
   }
-});
-
-router.get("/clsDetails", async (req, res) => {
-  const listOfclasses = await Class.findAll({
-    attributes: ["className", "teacherId"], // Replace 'columnName' with the actual name of the column you want to retrieve
-  });
-  res.json(listOfclasses);
 });
 
 module.exports = router;

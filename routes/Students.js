@@ -36,6 +36,16 @@ router.get("/classCount", async (req, res) => {
   res.json(result);
 });
 
+router.get("/StdCount/:className", async (req, res) => {
+  const className = req.params.className;
+  const classCount = await Student.count({
+    where: {
+      className: className,
+    },
+  });
+  res.json({ classCount });
+});
+
 router.post("/", async (req, res) => {
   const student = req.body;
   await Student.create(student);

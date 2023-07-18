@@ -46,6 +46,12 @@ app.use("/StudentPayment", StdPayRouter);
 const SalRouter = require("./routes/TchSalarys");
 app.use("/teacherSalary", SalRouter);
 
+const ApmntRouter = require("./routes/Appointments");
+app.use("/appointments", ApmntRouter);
+
+const ReqApmntRouter = require("./routes/RequestApmnts");
+app.use("/appointmentRequest", ReqApmntRouter);
+
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log("server running on port 3001");

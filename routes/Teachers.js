@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Teacher } = require("../models");
+const { Teacher,Class } = require("../models");
 
 router.get("/", async (req, res) => {
   const listOfTeachers = await Teacher.findAll();
@@ -52,6 +52,49 @@ router.get("/teacherList", async (req, res) => {
     regDate: teacher.regDate,
   }));
   res.json(formattedList);
+});
+
+router.get("/byTeacherId/:teacherId", async (req, res) => {
+  try {
+    const teacherId = req.params.teacherId;
+    const teacher = await Teacher.findOne({
+      where: { teacherId: teacherId },
+      include: [
+        {
+          model: Class,
+          attributes: ['className'],
+        }
+      ],
+    });
+
+    if (!teacher) {
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+
+    // Extract className from the first element of the "Classes" array, if available
+    const className = teacher.Classes.length > 0 ? teacher.Classes[0].className : null;
+
+    // Create a new object with the desired format
+    const formattedTeacher = {
+      teacherId: teacher.teacherId,
+      fName: teacher.fName,
+      lName: teacher.lName,
+      fullname: teacher.fullname,
+      address: teacher.address,
+      teacherNIC: teacher.teacherNIC,
+      teacherNo: teacher.teacherNo,
+      teacherEmail: teacher.teacherEmail,
+      regDate: teacher.regDate,
+      createdAt: teacher.createdAt,
+      updatedAt: teacher.updatedAt,
+      className: className,
+    };
+
+    res.json(formattedTeacher);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

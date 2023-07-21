@@ -20,5 +20,17 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
+  StdTransport.associate = (models) => {  
+    StdTransport.belongsTo(models.Student, {
+      foreignKey: {
+        name: "StudentId",
+        allowNull: false,
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+  };
+
+
   return StdTransport;
 };

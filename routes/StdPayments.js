@@ -13,4 +13,19 @@ router.post("/", async (req, res) => {
   res.json(createdPaymnt);
 });
 
+router.get("/pay/:StudentId", async (req, res) => {
+  const { StudentId } = req.params;
+  const result = await StdPayment.findAll({
+    where: { StudentId: StudentId },
+  });
+
+  const formattedList = result.map((evo) => ({
+    id: evo.id,
+    Day: evo.Day,
+    Payment: evo.Payment,
+    Note: evo.Note,
+    Month: evo.Month,
+  }));
+  res.json(formattedList);
+});
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { Student, Sequelize } = require("../models");
+const { Student,Parent,Class,Teacher, Sequelize } = require("../models");
+
 
 router.get("/", async (req, res) => {
   const listOfStudents = await Student.findAll();
@@ -12,6 +13,33 @@ router.get("/byId/:StudentId", async (req, res) => {
   const student = await Student.findByPk(id);
   res.json(student);
 });
+
+
+
+router.get("/bystudentId/:StudentId", async (req, res) => {
+  try {
+    const studentId = req.params.StudentId;
+    const student = await Student.findOne({
+      where: { StudentId: studentId },
+      include: [
+        {
+          model: Parent,
+          attributes: ['parentId', 'fatherName', 'fatherNIC', 'fatherNo', 'motherName', 'motherNIC', 'motherNo', 'pNote'],
+        }
+      ],
+    });
+
+   
+ 
+    res.json(student);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 
 router.get("/lastId", async (req, res) => {
   const lastStudent = await Student.findOne({

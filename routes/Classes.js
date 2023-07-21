@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Class } = require("../models");
+const { Class,Teacher } = require("../models");
 
 router.get("/", async (req, res) => {
   const listOfClass = await Class.findAll();
@@ -50,5 +50,23 @@ router.get("/clsDetails", async (req, res) => {
   });
   res.json(listOfclasses);
 });
+
+
+router.get("/clsTeachDetails/:className", async (req, res) => {
+ const className = req.params.className;
+  const listOfclasses = await Class.findOne({
+    where: { className: className },
+    include: [
+      {
+        model: Teacher,
+        attributes: ['teacherId', 'fName', 'lName'],
+      }
+    ],
+
+})  
+  res.json(listOfclasses);
+
+});
+
 
 module.exports = router;

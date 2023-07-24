@@ -55,6 +55,16 @@ app.use("/appointmentRequest", ReqApmntRouter);
 const BestKidRouter = require("./routes/BestKids");
 app.use("/bestKid", BestKidRouter);
 
+const AnnRouter = require("./routes/Announcement");
+app.use("/announcements", AnnRouter);
+
+const GuestMeetingsRouter = require("./routes/GuestMeetings");
+app.use("/guestMeetings", GuestMeetingsRouter);
+
+const TodayRouter = require("./routes/Todays");
+app.use("/today", TodayRouter);
+
+
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log("server running on port 3001");

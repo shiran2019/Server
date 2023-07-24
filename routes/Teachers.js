@@ -97,4 +97,28 @@ router.get("/byTeacherId/:teacherId", async (req, res) => {
   }
 });
 
+
+router.put("/upd/:teacherId", async (req, res) => {
+  const studentId = req.params.teacherId;
+  const updatedData = req.body;
+
+  try {
+    // Find the student by ID
+    const teacher = await Teacher.findByPk(studentId);
+
+    // If the student doesn't exist, return an error response
+    if (!teacher) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    // Update the student's properties with the provided data
+    await teacher.update(updatedData);
+
+    res.json({ message: "Student updated successfully", teacher });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;

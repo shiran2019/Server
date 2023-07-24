@@ -74,4 +74,36 @@ router.get("/attendance", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve attendance." });
   }
 });
+
+router.put("/upd/:teacherId/:Day", async (req, res) => {
+  const teacherId = req.params.teacherId;
+  const day = req.params.Day; // Make sure to use the correct case for the parameter name (Day instead of DAY)
+
+  const updatedData = req.body;
+
+  try {
+    // Find the teacher by teacherId and Day
+    const teacher = await TchAttendance.findOne({
+      where: {
+        teacherId: teacherId,
+        Day: day,
+      },
+    });
+
+    // If the teacher doesn't exist, return an error response
+    if (!teacher) {
+      return res.status(404).json({ error: "Teacher not found" });
+    }
+
+    // Update the teacher's properties with the provided data
+    await teacher.update(updatedData);
+
+    res.json({ message: "Teacher updated successfully", teacher });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 module.exports = router;

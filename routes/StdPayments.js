@@ -7,6 +7,7 @@ router.get("/", async (req, res) => {
   res.json(listOfPaymnts);
 });
 
+
 router.post("/", async (req, res) => {
   const pay = req.body;
   const createdPaymnt = await StdPayment.create(pay);
@@ -28,4 +29,28 @@ router.get("/pay/:StudentId", async (req, res) => {
   }));
   res.json(formattedList);
 });
+
+router.put("/upd/:id", async (req, res) => {
+  const studentId = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    // Find the student by ID
+    const student = await StdPayment.findByPk(studentId);
+
+    // If the student doesn't exist, return an error response
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    // Update the student's properties with the provided data
+    await student.update(updatedData);
+
+    res.json({ message: "Student updated successfully", student });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;

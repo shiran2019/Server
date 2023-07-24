@@ -14,7 +14,28 @@ router.get("/byId/:StudentId", async (req, res) => {
   res.json(student);
 });
 
+router.put("/upd/:StudentId", async (req, res) => {
+  const studentId = req.params.StudentId;
+  const updatedData = req.body;
 
+  try {
+    // Find the student by ID
+    const student = await Student.findByPk(studentId);
+
+    // If the student doesn't exist, return an error response
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    // Update the student's properties with the provided data
+    await student.update(updatedData);
+
+    res.json({ message: "Student updated successfully", student });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get("/bystudentId/:StudentId", async (req, res) => {
   try {
@@ -129,5 +150,7 @@ router.get("/class/:className", async (req, res) => {
 
   res.json(formattedList);
 });
+
+
 
 module.exports = router;

@@ -20,5 +20,26 @@ router.get("/evo", async (req, res) => {
   });
   res.json(listOfEvoss);
 });
+router.put("/upd/:EvoId", async (req, res) => {
+  const Id = req.params.EvoId;
+  const updatedData = req.body;
 
+  try {
+    // Find the student by ID
+    const evo = await CreateEvo.findByPk(Id);
+
+    // If the student doesn't exist, return an error response
+    if (!evo) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    // Update the student's properties with the provided data
+    await evo.update(updatedData);
+
+    res.json({ message: "Student updated successfully", evo });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 module.exports = router;

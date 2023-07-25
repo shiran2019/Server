@@ -6,7 +6,7 @@ router.get("/", async (req, res) => {
   const listOfPosts = await SpecialNote.findAll();
 
   // Filter only today's data based on the "Day" field
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toLocaleDateString("en-US").slice(0, 10);
   const todayData = listOfPosts.filter((post) => post.Day === today);
 
   res.json(todayData);
@@ -21,7 +21,7 @@ router.get("/role/:role", async (req, res) => {
     const listOfPosts = await SpecialNote.findAll();
   
     // Filter data based on both "Day" and "role" fields
-    const today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toLocaleDateString("en-US").slice(0, 10);
     const todayDataWithRole = listOfPosts.filter((post) => post.Day === today && post.role === role);
   
     res.json(todayDataWithRole);

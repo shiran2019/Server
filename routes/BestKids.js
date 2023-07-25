@@ -5,16 +5,24 @@ const { BestKid } = require("../models");
 router.get("/", async (req, res) => {
   const listOfPosts = await BestKid.findAll();
 
-  // Filter only today's data based on the "Day" field
-  const today = new Date().toISOString().slice(0, 10);
+
+
+  const today = new Date().toLocaleDateString("en-US").substr(0, 10);
+  console.log(today);
+  
   const todayData = listOfPosts.filter((post) => post.Day === today);
 
-
-
-
+  // Assuming post.Day is in ISO format (e.g., "YYYY-MM-DD")
+  
 
   res.json(todayData);
 });
+
+router.get("/a", async (req, res) => {
+  const listOfPosts = await BestKid.findAll();
+  res.json(listOfPosts);
+});
+
 router.post("/", async (req, res) => {
   const post = req.body;
   await BestKid.create(post);

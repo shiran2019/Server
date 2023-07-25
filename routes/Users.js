@@ -47,4 +47,15 @@ router.get("/auth", validateToken, async (req, res) => {
   res.json(req.user);
 });
 
+
+router.get("/admins", async (req, res) => {
+  const listOfusers = await User.findAll({
+    attributes: ["user"],
+    where: {
+      role: "Admin",
+    },
+  });
+  res.json(listOfusers);
+});
+
 module.exports = router;

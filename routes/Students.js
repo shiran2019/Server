@@ -151,6 +151,19 @@ router.get("/class/:className", async (req, res) => {
   res.json(formattedList);
 });
 
-
+router.get("/yearCount", async (req, res) => {
+  const classCounts = await Student.findAll({
+    attributes: [
+      "regyear",
+      [Sequelize.fn("COUNT", Sequelize.col("regyear")), "count"],
+    ],
+    group: ["regyear"],
+  });
+  const result = classCounts.map(({ regyear, dataValues }) => ({
+    regyear: regyear,
+    count: dataValues.count,
+  }));
+  res.json(result);
+});
 
 module.exports = router;

@@ -10,6 +10,13 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { teacherId, Day, Attendance } = req.body;
 
+  // Check if any of the required properties are null
+  if (!teacherId || !Day || Attendance === null) {
+    res.json({
+      error: "Fill all nessary details.",
+    });
+  }
+
   const existingAtt = await TchAttendance.findOne({
     where: { teacherId, Day },
   });
@@ -27,6 +34,7 @@ router.post("/", async (req, res) => {
     res.json(createdAtt);
   }
 });
+
 
 router.get("/attendance", async (req, res) => {
   try {

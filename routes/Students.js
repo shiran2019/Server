@@ -4,7 +4,14 @@ const { Student,Parent,Class,Teacher, Sequelize } = require("../models");
 
 
 router.get("/", async (req, res) => {
-  const listOfStudents = await Student.findAll();
+  const currentYear = new Date().getFullYear();
+  const listOfStudents = await Student.findAll({
+    where: {
+      regyear: currentYear,
+      status : 'Active'
+    },
+  });
+  console.log(currentYear)
   res.json(listOfStudents);
 });
 
@@ -72,6 +79,10 @@ router.get("/lastId", async (req, res) => {
 
 router.get("/classCount", async (req, res) => {
   const classCounts = await Student.findAll({
+    where: {
+      regyear: new Date().getFullYear(),
+      status : 'Active',
+    },
     attributes: [
       "className",
       [Sequelize.fn("COUNT", Sequelize.col("className")), "count"],
@@ -90,6 +101,8 @@ router.get("/StdCount/:className", async (req, res) => {
   const classCount = await Student.count({
     where: {
       className: className,
+      regyear: new Date().getFullYear(),
+      status : 'Active',
     },
   });
   res.json({ classCount });
@@ -103,6 +116,10 @@ router.post("/", async (req, res) => {
 
 router.get("/studentList", async (req, res) => {
   const listOfStudents = await Student.findAll({
+    where: {
+      regyear: new Date().getFullYear(),
+      status : 'Active'
+    },
     attributes: [
       "StudentId",
       "fName",
@@ -112,8 +129,10 @@ router.get("/studentList", async (req, res) => {
       "className",
       "regyear",
       "pNote",
+      "status"
     ],
   });
+
 
   // Extract the required properties for each student and assign a unique id
   const formattedList = listOfStudents.map((student, index) => ({
@@ -126,10 +145,50 @@ router.get("/studentList", async (req, res) => {
     className: student.className,
     regyear: student.regyear,
     pNote: student.pNote,
+    status: student.status
   }));
 
   res.json(formattedList);
 });
+
+router.get("/studentListAdmin", async (req, res) => {
+  const listOfStudents = await Student.findAll({
+    where: {
+      regyear: new Date().getFullYear(),
+      
+    },
+    attributes: [
+      "StudentId",
+      "fName",
+      "lName",
+      "gender",
+      "birthday",
+      "className",
+      "regyear",
+      "pNote",
+      "status"
+    ],
+  });
+
+
+  // Extract the required properties for each student and assign a unique id
+  const formattedList = listOfStudents.map((student, index) => ({
+    id: index + 1, // Assign a unique id based on the index (starting from 1)
+    StudentId: student.StudentId,
+    fName: student.fName,
+    lName: student.lName,
+    gender: student.gender,
+    birthday: student.birthday,
+    className: student.className,
+    regyear: student.regyear,
+    pNote: student.pNote,
+    status: student.status
+  }));
+
+  res.json(formattedList);
+});
+
+
 
 router.get("/class/:className", async (req, res) => {
   const className = req.params.className;
@@ -138,14 +197,18 @@ router.get("/class/:className", async (req, res) => {
   const studentsInClass = await Student.findAll({
     where: {
       className: className,
+      regyear: new Date().getFullYear(),
+      status : 'Active'
     },
   });
 
   // Extract the required properties for each student
-  const formattedList = studentsInClass.map((student) => ({
+  const formattedList = studentsInClass.map((student,index) => ({
+    id: index + 1, 
     StudentId: student.StudentId,
     fName: student.fName,
     pNote: student.pNote,
+
   }));
 
   res.json(formattedList);
@@ -165,5 +228,64 @@ router.get("/yearCount", async (req, res) => {
   }));
   res.json(result);
 });
+
+router.get("/daycare/:StudentId", async (req, res) => {
+  const StudentId = req.params.StudentId;
+
+  // Find all students in the specified class
+  const studentsInClass = await Student.findAll({
+    attributes: [ "StudentId", "dayCare"],
+    where: {
+      StudentId: StudentId,
+      regyear: new Date().getFullYear(),
+      status : 'Active'
+    },
+  });
+
+  const formattedList = studentsInClass.map((student) => ({
+    StudentId: student.StudentId,
+    dayCare : student.dayCare,
+  }));
+
+  res.json(formattedList);
+
+});
+
+
+router.get("/Daycare", async (req, res) => {
+ 
+ 
+  const studentsInClass = await Student.findAll({
+    where: {
+      dayCare: "DayCare",
+      regyear: new Date().getFullYear(),
+      status : 'Active'
+    },
+    include: [
+      {
+        model: Parent,
+        attributes: [ 'fatherName',  'fatherNo', 'motherName',  'motherNo'],
+      }
+    ],
+
+
+  });
+
+  const formattedList = studentsInClass.map((student) => ({
+    StudentId: student.StudentId,
+    dayCare : student.dayCare,
+    fName: student.fName,
+    lName: student.lName,
+    fatherName: student.Parent.fatherName,
+    fatherNo: student.Parent.fatherNo,
+    motherName: student.Parent.motherName,
+    motherNo: student.Parent.motherNo,
+    
+  }));
+
+  res.json(formattedList);
+
+});
+
 
 module.exports = router;

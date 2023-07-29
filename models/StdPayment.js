@@ -1,30 +1,39 @@
 module.exports = (sequelize, DataTypes) => {
   const StdPayment = sequelize.define("StdPayment", {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     Day: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     Month: {
       type: DataTypes.STRING,
       allowNull: false,
+      primaryKey: true,
     },
     Payment: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     Note: {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    StudentId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      primaryKey: true,
+    },
+
+
+
+
   });
-  StdPayment.associate = (models) => {
-    StdPayment.belongsTo(models.Student, {
-      foreignKey: {
-        name: "StudentId",
-      },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
-    });
-  };
+
+
   return StdPayment;
 };

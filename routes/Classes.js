@@ -14,6 +14,13 @@ router.get("/cls", async (req, res) => {
   res.json(listOfClass);
 });
 
+
+// router.post("/", async (req, res) => {
+//   const post = req.body;
+//   await Class.create(post);
+//   res.json(post);
+// });
+
 router.post("/", async (req, res) => {
   const { teacherId, className } = req.body;
 

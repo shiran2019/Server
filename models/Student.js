@@ -49,6 +49,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    dayCare: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
+
   });
 
   Student.associate = (models) => {
@@ -58,12 +67,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
-    });
-
-    Student.hasMany(models.StdPayment, {
-      foreignKey: {
-        name: "StudentId",
-      },
     });
 
     Student.hasMany(models.TermEvo, {

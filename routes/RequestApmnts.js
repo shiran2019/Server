@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { RequestApmnt, Teacher } = require("../models");
+const { RequestApmnt, Teacher, Student } = require("../models");
 
 // router.get("/", async (req, res) => {
 //   const lists = await RequestApmnt.findAll();
@@ -19,11 +19,9 @@ router.get("/:StudentId", async (req, res) => {
         attributes: ["fName"],
       },
     });
-
     if (!requestApmnts || requestApmnts.length === 0) {
       return res.status(404).json({ error: "No requests found" });
     }
-
     const response = requestApmnts.map((requestApmnt) => {
       const { Teacher } = requestApmnt;
       return {
@@ -31,7 +29,6 @@ router.get("/:StudentId", async (req, res) => {
         fName: Teacher.fName,
       };
     });
-
     res.json(response);
   } catch (error) {
     console.error(error);
@@ -94,5 +91,38 @@ router.get("/", async (req, res) => {
   );
   res.json(lists);
 });
+
+
+
+router.get("/tch/:teacherId", async (req, res) => {
+  const { teacherId } = req.params;
+
+  try {
+    const requestApmnts = await RequestApmnt.findAll({
+      attributes: ["id", "Note", "Day", "time", "Status", "StudentId", "teacherId"],
+      where: { teacherId: teacherId, Status: "Pending" },
+      include: {
+        model: Student,
+        attributes: ["fName","StudentId"],
+      },
+    });
+    
+    const response = requestApmnts.map((requestApmnt) =>( {
+      StudentId : requestApmnt.StudentId,
+      fName : requestApmnt.Student.fName,
+      Note : requestApmnt.Note,
+      Day : requestApmnt.Day,
+      time : requestApmnt.time,
+      id : requestApmnt.id,
+    
+    }));
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 module.exports = router;

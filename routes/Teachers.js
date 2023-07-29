@@ -3,7 +3,13 @@ const router = express.Router();
 const { Teacher,Class } = require("../models");
 
 router.get("/", async (req, res) => {
-  const listOfTeachers = await Teacher.findAll();
+  const listOfTeachers = await Teacher.findAll(
+    {
+      where: {
+        status : 'Active'
+      },
+    }
+  );
   res.json(listOfTeachers);
 });
 
@@ -23,13 +29,19 @@ router.get("/lastId", async (req, res) => {
 
 router.get("/tch", async (req, res) => {
   const listOfteachers = await Teacher.findAll({
-    attributes: ["teacherId", "fName"], // Replace 'columnName' with the actual name of the column you want to retrieve
+    where: {
+      status : 'Active'
+    },
+    attributes: ["teacherId", "fName"], 
   });
   res.json(listOfteachers);
 });
 
 router.get("/teacherList", async (req, res) => {
   const listOfTeachersall = await Teacher.findAll({
+    where: {
+      status : 'Active'
+    },
     attributes: [
       "teacherId",
       "fName",
@@ -38,6 +50,7 @@ router.get("/teacherList", async (req, res) => {
       "teacherNo",
       "teacherEmail",
       "regDate",
+      "status"
     ],
   });
   // Extract the required properties for each student and assign a unique id
@@ -50,6 +63,36 @@ router.get("/teacherList", async (req, res) => {
     teacherNo: teacher.teacherNo,
     teacherEmail: teacher.teacherEmail,
     regDate: teacher.regDate,
+    status: teacher.status
+  }));
+  res.json(formattedList);
+});
+
+router.get("/teacherListAdmin", async (req, res) => {
+  const listOfTeachersall = await Teacher.findAll({
+  
+    attributes: [
+      "teacherId",
+      "fName",
+      "lName",
+      "teacherNIC",
+      "teacherNo",
+      "teacherEmail",
+      "regDate",
+      "status"
+    ],
+  });
+  // Extract the required properties for each student and assign a unique id
+  const formattedList = listOfTeachersall.map((teacher, index) => ({
+    id: index + 1, // Assign a unique id based on the index (starting from 1)
+    teacherId: teacher.teacherId,
+    fName: teacher.fName,
+    lName: teacher.lName,
+    teacherNIC: teacher.teacherNIC,
+    teacherNo: teacher.teacherNo,
+    teacherEmail: teacher.teacherEmail,
+    regDate: teacher.regDate,
+    status: teacher.status
   }));
   res.json(formattedList);
 });
@@ -58,7 +101,7 @@ router.get("/byTeacherId/:teacherId", async (req, res) => {
   try {
     const teacherId = req.params.teacherId;
     const teacher = await Teacher.findOne({
-      where: { teacherId: teacherId },
+      where: { teacherId: teacherId, status : 'Active' },
       include: [
         {
           model: Class,

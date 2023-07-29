@@ -8,9 +8,29 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const evo = req.body;
-  const createdEvo = await TermEvo.create(evo);
-  res.json(createdEvo);
+
+  try{
+    const evo = req.body;
+    const { EvoId, StudentId } = evo;
+  
+    if (!EvoId || !StudentId) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+  
+    const existingEvo = await TermEvo.findOne({
+      where: { EvoId: EvoId, StudentId: StudentId },
+    });
+    if (existingEvo) {
+      res.json({ error: "Data already exists" });
+    } else {
+      await TermEvo.create(evo);
+      res.json(evo);
+    }
+  }
+  catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+  
 });
 
 router.get("/:EvoId", async (req, res) => {

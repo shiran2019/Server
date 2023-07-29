@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { StdPayment } = require("../models");
+const { StdPayment ,Student } = require("../models");
 
 router.get("/", async (req, res) => {
   const listOfPaymnts = await StdPayment.findAll();
@@ -9,10 +9,29 @@ router.get("/", async (req, res) => {
 
 
 router.post("/", async (req, res) => {
-  const pay = req.body;
-  const createdPaymnt = await StdPayment.create(pay);
-  res.json(createdPaymnt);
+  try {
+    const pay = req.body;
+    const { Month, StudentId } = pay;
+
+    if (!Month || !StudentId) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const existingPayment = await StdPayment.findOne({
+      where: { Month: Month, StudentId: StudentId },
+    });
+    if (existingPayment) {
+      res.json({ error: "Data already exists" });
+    } else {
+      await StdPayment.create(pay);
+      res.json(pay);
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
+
 
 router.get("/pay/:StudentId", async (req, res) => {
   const { StudentId } = req.params;

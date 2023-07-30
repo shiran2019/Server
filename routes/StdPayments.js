@@ -49,13 +49,16 @@ router.get("/pay/:StudentId", async (req, res) => {
   res.json(formattedList);
 });
 
-router.put("/upd/:id", async (req, res) => {
-  const studentId = req.params.id;
+router.put("/upd/:StudentId/:Month", async (req, res) => {
+  const StudentId = req.params.StudentId;
+  const Month = req.params.Month;
   const updatedData = req.body;
 
   try {
     // Find the student by ID
-    const student = await StdPayment.findByPk(studentId);
+    const student = await StdPayment.findOne({
+      where: { StudentId: StudentId, Month: Month },
+    })
 
     // If the student doesn't exist, return an error response
     if (!student) {

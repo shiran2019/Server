@@ -43,10 +43,18 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/loginTemp", async (req, res) => {
+  // const accessToken = sign(
+  //   { user: "Admin", role: "Admin" },
+  //   "sec"
+  // );
+  // res.json(accessToken);
+  res.json("test");
+});
+
 router.get("/auth", validateToken, async (req, res) => {
   res.json(req.user);
 });
-
 
 router.get("/admins", async (req, res) => {
   const listOfusers = await User.findAll({

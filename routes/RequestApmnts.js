@@ -114,6 +114,7 @@ router.get("/tch/:teacherId", async (req, res) => {
       Day : requestApmnt.Day,
       time : requestApmnt.time,
       id : requestApmnt.id,
+      Status : requestApmnt.Status,
     
     }));
 

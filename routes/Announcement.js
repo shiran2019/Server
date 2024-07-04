@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { SpecialNote } = require("../models");
+const { SpecialNote ,Student} = require("../models");
 
 router.get("/", async (req, res) => {
   const listOfPosts = await SpecialNote.findAll();
@@ -11,22 +11,53 @@ router.get("/", async (req, res) => {
 
   res.json(todayData);
 });
+
 router.post("/", async (req, res) => {
   const post = req.body;
   await SpecialNote.create(post);
   res.json(post);
 });
+
+
 router.get("/role/:role", async (req, res) => {
     const { role } = req.params;
+    const listOfPosts = await SpecialNote.findAll();
+    // Filter data based on both "Day" and "role" fields
+    const today = new Date().toLocaleDateString("en-US").slice(0, 10);
+    const todayDataWithRole = listOfPosts.filter((post) => post.Day === today && post.role === role);
+    res.json(todayDataWithRole);
+  });
+
+
+  router.get("/tchCls", async (req, res) => {
+    
     const listOfPosts = await SpecialNote.findAll();
   
     // Filter data based on both "Day" and "role" fields
     const today = new Date().toLocaleDateString("en-US").slice(0, 10);
-    const todayDataWithRole = listOfPosts.filter((post) => post.Day === today && post.role === role);
+    const todayDataWithRole = listOfPosts.filter((post) => post.Day === today && (!(post.role === "Teacher") && !( post.role === "Student")));
   
     res.json(todayDataWithRole);
   });
 
+  router.get("/class/:StudentId", async (req, res) => {
+    const { StudentId } = req.params;
+
+    const stdCls = await Student.findOne({ 
+      attributes: ['className'],
+      where: { StudentId : StudentId 
+      }
+      
+    });
+
+    const listOfPosts = await SpecialNote.findAll();
+  
+    // Filter data based on both "Day" and "role" fields
+    const today = new Date().toLocaleDateString("en-US").slice(0, 10);
+    const todayDataWithRole = listOfPosts.filter((post) => post.Day === today && post.role === stdCls.className);
+  
+    res.json(todayDataWithRole);
+  });
   router.delete("/ann/:id", async (req, res) => {
     const { id } = req.params;
   
